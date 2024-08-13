@@ -165,19 +165,16 @@ def unary():
             return num()
 
 def num():
-    match token_peek():
+    match token_next():
         case Token.NUM:
-            token_next()
             return stack.pop()
         case Token.LBRAC:
-            token_next()
             res = expr()
             token = token_next()
             if token != Token.RBRAC:
                 raise Exception("Syntax error")
             return res
         case Token.SQRT:
-            token_next()
             token = token_next()
             if token != Token.LBRAC:
                 raise Exception("Syntax error")
@@ -187,7 +184,6 @@ def num():
                 raise Exception("Syntax error")
             return math.sqrt(res)
         case Token.COS:
-            token_next()
             token = token_next()
             if token != Token.LBRAC:
                 raise Exception("Syntax error")
@@ -197,7 +193,6 @@ def num():
                 raise Exception("Syntax error")
             return math.cos(res)
         case Token.SIN:
-            token_next()
             token = token_next()
             if token != Token.LBRAC:
                 raise Exception("Syntax error")
@@ -207,7 +202,6 @@ def num():
                 raise Exception("Syntax error")
             return math.sin(res)
         case Token.EXP:
-            token_next()
             token = token_next()
             if token != Token.LBRAC:
                 raise Exception("Syntax error")
@@ -217,13 +211,11 @@ def num():
                 raise Exception("Syntax error")
             return math.exp(res)
         case Token.ID:
-            token_next()
             name = stack.pop()
             if symbol_table[name] is None:
                 raise Exception(f"No value assigned to {name}")
             return symbol_table[name]
         case Token.PI:
-            token_next()
             return math.pi
         case _:
             raise Exception("Syntax error")
@@ -312,11 +304,17 @@ def program():
                 elif c == 'x' and num == 0 and count == 1:
                     h = 0
                     c = sys.stdin.read(1)
-                    while c.isnumeric() or c == 'a' or c == 'b' or c ==  'c' or c =='d' or c == 'e' or c == 'f':
+                    while c.isnumeric()         \
+                            or c.lower() == 'a' \
+                            or c.lower() == 'b' \
+                            or c.lower() == 'c' \
+                            or c.lower() == 'd' \
+                            or c.lower() == 'e' \
+                            or c.lower() == 'f':
                         if c.isnumeric():
                             num = num*16 + int(c)
                         else:
-                            match c:
+                            match c.lower():
                                 case 'a':
                                     num = num*16 + 10
                                 case 'b':
