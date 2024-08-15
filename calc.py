@@ -27,6 +27,7 @@ class Token(Enum):
     EXP = 21
     PI = 22
     XOR = 23
+    CMPL = 24 #complement
 
 stack = []
 tokens = []
@@ -161,6 +162,9 @@ def unary():
         case Token.SUB:
             token_next();
             return -unary()
+        case Token.CMPL:
+            token_next();
+            return ~unary()
         case _:
             return num()
 
@@ -283,6 +287,9 @@ def program():
             case '^':
                 tokens.insert(0, Token.XOR)
                 c = sys.stdin.read(1)
+            case '~':
+                tokens.insert(0, Token.CMPL)
+                c = sys.stdin.read(1)
             case '=':
                 tokens.insert(0, Token.ASGN)
                 c = sys.stdin.read(1)
@@ -342,13 +349,13 @@ def program():
 
                 tokens.insert(0, Token.NUM)
                 stack.insert(0, num)
-            case 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | \
-                 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | \
-                 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | \
-                 'v' | 'x' | 'y' | 'z'                     \
-                 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | \
-                 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | \
-                 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | \
+            case 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' |  \
+                 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' |  \
+                 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' |  \
+                 'v' | 'x' | 'y' | 'z' |                    \
+                 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' |  \
+                 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' |  \
+                 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' |  \
                  'V' | 'X' | 'Y' | 'Z':
                 s = ""
                 while c.isalpha():
