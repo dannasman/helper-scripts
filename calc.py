@@ -358,7 +358,7 @@ def program():
                  'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' |  \
                  'V' | 'X' | 'Y' | 'Z':
                 s = ""
-                while c.isalpha():
+                while c.isalpha() or c.isnumeric() or c == '_':
                     s += c
                     c = sys.stdin.read(1)
                 
