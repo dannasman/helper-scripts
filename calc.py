@@ -356,7 +356,7 @@ def program():
                  'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' |  \
                  'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' |  \
                  'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' |  \
-                 'V' | 'X' | 'Y' | 'Z':
+                 'V' | 'X' | 'Y' | 'Z' | '_':
                 s = ""
                 while c.isalpha() or c.isnumeric() or c == '_':
                     s += c
