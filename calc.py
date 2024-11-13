@@ -3,6 +3,15 @@ import math
 import sys
 from enum import Enum
 
+BASE = 64
+
+def bitflip(n):
+    nf = 0
+    for i in range(BASE):
+        if (n >> i) & 1 == 0:
+            nf += (1 << i)
+    return nf
+
 class Token(Enum):
     ADD = 1
     SUB = 2
@@ -18,8 +27,8 @@ class Token(Enum):
     LBRAC = 12
     RBRAC = 13
     NUM = 14
-    OR = 15 #bitwise
-    AND = 16 #bitwise
+    OR = 15 # bitwise
+    AND = 16 # bitwise
     ID = 17
     ASGN = 18
     SIN = 19
@@ -27,7 +36,8 @@ class Token(Enum):
     EXP = 21
     PI = 22
     XOR = 23
-    CMPL = 24 #complement
+    CMPL = 24 # complement
+    ALIGN = 25 # align up
 
 stack = []
 tokens = []
@@ -64,6 +74,16 @@ def stmt():
                 res = expr()
                 print(f"\t{hex(res)}")
                 ans = res
+            except Exception as e:
+                print(e)
+        case Token.ALIGN:
+            try:
+                token_next()
+                n = expr()
+                res = expr()
+                aligned = (-res & (n - 1)) + res
+                print(f"\t{aligned}")
+                ans = aligned
             except Exception as e:
                 print(e)
         case Token.ID:
@@ -381,6 +401,8 @@ def program():
                 elif s == "ans":
                     tokens.insert(0, Token.NUM)
                     stack.insert(0, ans)
+                elif s == "align":
+                    tokens.insert(0, Token.ALIGN)
                 elif s != "":
                     if s not in symbol_table.keys():
                         symbol_table[s] = None
