@@ -12,6 +12,14 @@ def bitflip(n):
             nf += (1 << i)
     return nf
 
+# Check if power of two
+def power_of_two(n):
+    s = 0
+    for i in range(BASE):
+        if (n >> i) & 1 == 1:
+            s += 1
+    return s == 1
+
 class Token(Enum):
     ADD = 1
     SUB = 2
@@ -80,6 +88,7 @@ def stmt():
             try:
                 token_next()
                 n = expr()
+                assert power_of_two(n), f"{n} is not a power of two"
                 res = expr()
                 aligned = (-res & (n - 1)) + res
                 print(f"\t{aligned}")
