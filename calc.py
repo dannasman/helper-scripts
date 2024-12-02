@@ -8,16 +8,14 @@ BASE = 64
 def bitflip(n):
     nf = 0
     for i in range(BASE):
-        if (n >> i) & 1 == 0:
-            nf += (1 << i)
+        nf += ((((n >> i) ^ 1) & 1) << i)
     return nf
 
 # Check if power of two
 def power_of_two(n):
     s = 0
     for i in range(BASE):
-        if (n >> i) & 1 == 1:
-            s += 1
+        s += (n >> i) & 1
     return s == 1
 
 class Token(Enum):
@@ -46,6 +44,7 @@ class Token(Enum):
     XOR = 23
     CMPL = 24 # complement
     ALIGN = 25 # align up
+    BITFLIP = 26
 
 stack = []
 tokens = []
@@ -93,6 +92,15 @@ def stmt():
                 aligned = (-res & (n - 1)) + res
                 print(f"\t{aligned}")
                 ans = aligned
+            except Exception as e:
+                print(e)
+        case Token.BITFLIP:
+            try:
+                token_next()
+                n = expr()
+                flipped = bitflip(n)
+                print(f"\t{flipped}")
+                ans = flipped
             except Exception as e:
                 print(e)
         case Token.ID:
@@ -412,6 +420,8 @@ def program():
                     stack.insert(0, ans)
                 elif s == "align":
                     tokens.insert(0, Token.ALIGN)
+                elif s == "bitflip":
+                    tokens.insert(0, Token.BITFLIP)
                 elif s != "":
                     if s not in symbol_table.keys():
                         symbol_table[s] = None
