@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
-__help__ = """
-calc.py
+__help__ = """calc.py
 Commands:
     <expr1> + <expr2>
     <expr1> - <expr2>
@@ -23,6 +22,7 @@ Commands:
     hex <expr>              Print the hexadecimal representation of expr
     sin(<expr>)             Sine function
     sqrt(<expr>)            Square root of expr
+    exit                    Exit calc.py
 """
 
 import math
