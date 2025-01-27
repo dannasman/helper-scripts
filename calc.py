@@ -1,4 +1,30 @@
 #!/usr/bin/python3
+
+__help__ = """
+calc.py
+Commands:
+    <expr1> + <expr2>
+    <expr1> - <expr2>
+    <expr1> * <expr2>
+    <expr1> / <expr2>
+    <expr1> % <expr2>
+    <expr1> ** <expr2>      expr1 raised to the power of expr2
+    <expr1> & <expr2>       Bitwise AND
+    <expr1> | <expr2>       Bitwise OR
+    <expr1> ^ <expr2>       Bitwise XOR
+    ~ <expr1>               Complement of expr1
+    <expr1> << <expr2>      Shift expr1 to the left by expr2
+    <expr1> >> <expr2>      Shift expr1 to the right by expr2
+    align <expr1> <expr2>   Align expr2 up by expr1 (has to be power of two)
+    bf <expr>               Flip the bits of expr
+    bin <expr>              Print the binary representation of expr
+    cos(<expr>)             Cosine function
+    exp(<expr>)             Exponential function
+    hex <expr>              Print the hexadecimal representation of expr
+    sin(<expr>)             Sine function
+    sqrt(<expr>)            Square root of expr
+"""
+
 import math
 import sys
 from enum import Enum
@@ -19,32 +45,33 @@ def power_of_two(n):
     return s == 1
 
 class Token(Enum):
-    ADD = 1
-    SUB = 2
-    MUL = 3
-    DIV = 4
-    BIN = 5
-    HEX = 6
-    POW = 7
-    LSHIFT = 8
-    RSHIFT = 9
-    SQRT = 10
-    REM = 11
-    LBRAC = 12
-    RBRAC = 13
-    NUM = 14
-    OR = 15 # bitwise
-    AND = 16 # bitwise
-    ID = 17
-    ASGN = 18
-    SIN = 19
-    COS = 20
-    EXP = 21
-    PI = 22
-    XOR = 23
-    CMPL = 24 # complement
-    ALIGN = 25 # align up
+    ADD     = 1
+    SUB     = 2
+    MUL     = 3
+    DIV     = 4
+    BIN     = 5
+    HEX     = 6
+    POW     = 7
+    LSHIFT  = 8
+    RSHIFT  = 9
+    SQRT    = 10
+    REM     = 11
+    LBRAC   = 12
+    RBRAC   = 13
+    NUM     = 14
+    OR      = 15 # bitwise
+    AND     = 16 # bitwise
+    ID      = 17
+    ASGN    = 18
+    SIN     = 19
+    COS     = 20
+    EXP     = 21
+    PI      = 22
+    XOR     = 23
+    CMPL    = 24 # complement
+    ALIGN   = 25 # align up
     BITFLIP = 26
+    HELP    = 27
 
 stack = []
 tokens = []
@@ -103,6 +130,8 @@ def stmt():
                 ans = flipped
             except Exception as e:
                 print(e)
+        case Token.HELP:
+            print(__help__)
         case Token.ID:
             token = token_next()
             if token_peek() == Token.ASGN:
@@ -420,8 +449,10 @@ def program():
                     stack.insert(0, ans)
                 elif s == "align":
                     tokens.insert(0, Token.ALIGN)
-                elif s == "bitflip":
+                elif s == "bf":
                     tokens.insert(0, Token.BITFLIP)
+                elif s == "help":
+                    tokens.insert(0, Token.HELP)
                 elif s != "":
                     if s not in symbol_table.keys():
                         symbol_table[s] = None
