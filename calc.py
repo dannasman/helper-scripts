@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
-__help__ = """calc.py
+__help__ = """
+calc.py
 Commands:
+    <var> = <expr>          Assign expr to var
     <expr1> + <expr2>
     <expr1> - <expr2>
     <expr1> * <expr2>
@@ -19,7 +21,9 @@ Commands:
     bin <expr>              Print the binary representation of expr
     cos(<expr>)             Cosine function
     exp(<expr>)             Exponential function
+    float(<expr>)           Cast expr to float
     hex <expr>              Print the hexadecimal representation of expr
+    int(<expr>)             Cast expr to int
     sin(<expr>)             Sine function
     sqrt(<expr>)            Square root of expr
     exit                    Exit calc.py
@@ -71,7 +75,9 @@ class Token(Enum):
     CMPL    = 24 # complement
     ALIGN   = 25 # align up
     BITFLIP = 26
-    HELP    = 27
+    INT     = 27 # cast to int
+    FLOAT   = 28 # cast to float
+    HELP    = 29
 
 stack = []
 tokens = []
@@ -280,6 +286,24 @@ def num():
             if token != Token.RBRAC:
                 raise Exception("Syntax error")
             return math.exp(res)
+        case Token.FLOAT:
+            token = token_next()
+            if token != Token.LBRAC:
+                raise Exception("Syntax error")
+            res = expr()
+            token = token_next()
+            if token != Token.RBRAC:
+                raise Exception("Syntax error")
+            return float(res)
+        case Token.INT:
+            token = token_next()
+            if token != Token.LBRAC:
+                raise Exception("Syntax error")
+            res = expr()
+            token = token_next()
+            if token != Token.RBRAC:
+                raise Exception("Syntax error")
+            return int(res)
         case Token.ID:
             name = stack.pop()
             if symbol_table[name] is None:
@@ -451,6 +475,10 @@ def program():
                     tokens.insert(0, Token.ALIGN)
                 elif s == "bf":
                     tokens.insert(0, Token.BITFLIP)
+                elif s == "int":
+                    tokens.insert(0, Token.INT)
+                elif s == "float":
+                    tokens.insert(0, Token.FLOAT)
                 elif s == "help":
                     tokens.insert(0, Token.HELP)
                 elif s != "":
